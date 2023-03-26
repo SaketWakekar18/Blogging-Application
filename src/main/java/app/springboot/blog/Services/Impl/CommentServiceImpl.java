@@ -24,20 +24,21 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private ModelMapper modelMapper;
+
     @Override
-    public CommentDTO createComment(CommentDTO commentDTO, int postid,int userid) {
-        Post post = this.postRepository.findById(postid).orElseThrow(()->new ResourceNotFoundException("Post","ID",postid));
-        User user = this.userRepository.findById(userid).orElseThrow(()->new ResourceNotFoundException("User","ID",userid));
-        Comment comment = this.modelMapper.map(commentDTO,Comment.class);
+    public CommentDTO createComment(CommentDTO commentDTO, int postid, int userid) {
+        Post post = this.postRepository.findById(postid).orElseThrow(() -> new ResourceNotFoundException("Post", "ID", postid));
+        User user = this.userRepository.findById(userid).orElseThrow(() -> new ResourceNotFoundException("User", "ID", userid));
+        Comment comment = this.modelMapper.map(commentDTO, Comment.class);
         comment.setPost(post);
         comment.setUsers(user);
         Comment savedComment = this.commentRepository.save(comment);
-        return this.modelMapper.map(savedComment,CommentDTO.class);
+        return this.modelMapper.map(savedComment, CommentDTO.class);
     }
 
     @Override
     public void deleteComment(int commentid) {
-        Comment comment = this.commentRepository.findById(commentid).orElseThrow(()->new ResourceNotFoundException("Comment","ID",commentid));
+        Comment comment = this.commentRepository.findById(commentid).orElseThrow(() -> new ResourceNotFoundException("Comment", "ID", commentid));
         this.commentRepository.delete(comment);
     }
 }

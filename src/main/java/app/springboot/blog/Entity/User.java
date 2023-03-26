@@ -30,6 +30,7 @@ public class User implements UserDetails {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "roleid"))
     private Set<Role> roles = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getRolename())).collect(Collectors.toList());

@@ -21,7 +21,7 @@ public class FileServiceImpl implements FileService {
         String filePath = path + File.separator + fileNewName;
 
         File file = new File(path);
-        if(!file.exists()){
+        if (!file.exists()) {
             file.mkdir();
         }
 

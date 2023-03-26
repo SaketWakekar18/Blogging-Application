@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,40 +32,41 @@ public class PostServiceImpl implements PostService {
     private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
-    public PostDTO createPost(PostDTO postDTO,int user_id,int category_id) {
-        User user = this.userRepository.findById(user_id).orElseThrow(()->new ResourceNotFoundException("User","ID",user_id));
-        Category category = this.categoryRepository.findById(category_id).orElseThrow(()->new ResourceNotFoundException("Category","ID",category_id));
-        Post post = this.modelMapper.map(postDTO,Post.class);
+    public PostDTO createPost(PostDTO postDTO, int user_id, int category_id) {
+        User user = this.userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User", "ID", user_id));
+        Category category = this.categoryRepository.findById(category_id).orElseThrow(() -> new ResourceNotFoundException("Category", "ID", category_id));
+        Post post = this.modelMapper.map(postDTO, Post.class);
         post.setImageName("default.jpg");
         post.setAddedDate(new Date());
         post.setUser(user);
         post.setCategory(category);
         Post savedUser = this.postRepository.save(post);
-        return this.modelMapper.map(savedUser,PostDTO.class);
+        return this.modelMapper.map(savedUser, PostDTO.class);
     }
 
     @Override
     public PostDTO updatepost(PostDTO postDTO, int post_id) {
-        Post post = this.postRepository.findById(post_id).orElseThrow(()->new ResourceNotFoundException("Post","ID",post_id));
+        Post post = this.postRepository.findById(post_id).orElseThrow(() -> new ResourceNotFoundException("Post", "ID", post_id));
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
         post.setImageName(postDTO.getImageName());
         Post updatedPost = this.postRepository.save(post);
-        return this.modelMapper.map(updatedPost,PostDTO.class);
+        return this.modelMapper.map(updatedPost, PostDTO.class);
 
     }
 
     @Override
     public void deletePost(int post_id) {
-        Post post = this.postRepository.findById(post_id).orElseThrow(()->new ResourceNotFoundException("Post","ID",post_id));
+        Post post = this.postRepository.findById(post_id).orElseThrow(() -> new ResourceNotFoundException("Post", "ID", post_id));
         this.postRepository.delete(post);
     }
 
     @Override
     public List<PostDTO> getAllPosts() {
         List<Post> posts = this.postRepository.findAll();
-        List<PostDTO> postDTOS = posts.stream().map(post -> this.modelMapper.map(post,PostDTO.class)).collect(Collectors.toList());
+        List<PostDTO> postDTOS = posts.stream().map(post -> this.modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
         return postDTOS;
     }
 
@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponse getAllPostsWithPaginationAndSorting(int pageNumber, int pageSize, String sortBy) {
-        Page<Post> posts = this.postRepository.findAll(PageRequest.of(pageNumber,pageSize,Sort.by(sortBy).ascending()));
+        Page<Post> posts = this.postRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending()));
         List<PostDTO> postDTOS = posts.stream().map(post -> this.modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
         PostResponse postResponse = new PostResponse();
         postResponse.setContent(postDTOS);
@@ -100,30 +100,30 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getPostById(int post_id) {
-        Post post = this.postRepository.findById(post_id).orElseThrow(()->new ResourceNotFoundException("Post","ID",post_id));
-        return this.modelMapper.map(post,PostDTO.class);
+        Post post = this.postRepository.findById(post_id).orElseThrow(() -> new ResourceNotFoundException("Post", "ID", post_id));
+        return this.modelMapper.map(post, PostDTO.class);
     }
 
     @Override
     public List<PostDTO> getPostByCategory(int category_id) {
-        Category category = this.categoryRepository.findById(category_id).orElseThrow(()->new ResourceNotFoundException("Category","ID",category_id));
+        Category category = this.categoryRepository.findById(category_id).orElseThrow(() -> new ResourceNotFoundException("Category", "ID", category_id));
         List<Post> postByCategory = this.postRepository.findByCategory(category);
-        List<PostDTO> postDTOS = postByCategory.stream().map(post -> this.modelMapper.map(post,PostDTO.class)).collect(Collectors.toList());
+        List<PostDTO> postDTOS = postByCategory.stream().map(post -> this.modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
         return postDTOS;
     }
 
     @Override
     public List<PostDTO> getPostByUser(int user_id) {
-        User user = this.userRepository.findById(user_id).orElseThrow(()->new ResourceNotFoundException("User","ID",user_id));
+        User user = this.userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User", "ID", user_id));
         List<Post> postByUser = this.postRepository.findByUser(user);
-        List<PostDTO> postDTOS = postByUser.stream().map(post -> this.modelMapper.map(post,PostDTO.class)).collect(Collectors.toList());
+        List<PostDTO> postDTOS = postByUser.stream().map(post -> this.modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
         return postDTOS;
     }
 
     @Override
     public List<PostDTO> searchPosts(String keyword) {
         List<Post> searchPost = this.postRepository.findByTitleContaining(keyword);
-        List<PostDTO> postDTOS = searchPost.stream().map(post -> this.modelMapper.map(post,PostDTO.class)).collect(Collectors.toList());
+        List<PostDTO> postDTOS = searchPost.stream().map(post -> this.modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
         return postDTOS;
     }
 

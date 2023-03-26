@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebMvc
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    public static final String[] PUBLIC_URLS ={
+    public static final String[] PUBLIC_URLS = {
             "/api/auth/**",
             "/v3/api-docs",
             "/v2/api-docs",
@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private CustomUserDetailService customUserDetailService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -61,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

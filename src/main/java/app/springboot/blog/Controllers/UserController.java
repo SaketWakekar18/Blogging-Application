@@ -3,6 +3,8 @@ package app.springboot.blog.Controllers;
 import app.springboot.blog.Payloads.APIResponse;
 import app.springboot.blog.Payloads.UserDTO;
 import app.springboot.blog.Services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +19,15 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
-//    @PostMapping("/")
-//    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
-//        UserDTO createdUserDTO = this.userService.createUser(userDTO);
-//        return new ResponseEntity<>(createdUserDTO, HttpStatus.CREATED);
-//    }
-
+/*    @PostMapping("/")
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
+        UserDTO createdUserDTO = this.userService.createUser(userDTO);
+        return new ResponseEntity<>(createdUserDTO, HttpStatus.CREATED);
+    }*/
     @PutMapping("/{user_id}")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable int user_id){
         UserDTO updatedUserDTO = this.userService.updateUser(userDTO,user_id);

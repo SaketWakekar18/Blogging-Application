@@ -20,6 +20,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<APIResponse> emailAddressAlreadyExists(EmailAlreadyExistsException ex) {
+        String message = ex.getMessage();
+        APIResponse apiResponse = new APIResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.ALREADY_REPORTED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errorsMap = new HashMap<>();
@@ -31,6 +38,7 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(APIException.class)
     public ResponseEntity<APIResponse> handleApiException(APIException ex) {
         String message = ex.getMessage();

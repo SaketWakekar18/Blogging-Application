@@ -1,9 +1,9 @@
 package app.springboot.blog.Payloads;
 
-import app.springboot.blog.Entity.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;

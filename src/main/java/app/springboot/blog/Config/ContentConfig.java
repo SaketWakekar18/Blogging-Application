@@ -12,7 +12,7 @@ public class ContentConfig implements WebMvcConfigurer {
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer.favorParameter(true).parameterName("MediaType")
                 .defaultContentType(MediaType.APPLICATION_JSON)
-                .mediaType("json",MediaType.APPLICATION_JSON)
-                .mediaType("xml",MediaType.APPLICATION_XML);
+                .mediaType("json", MediaType.APPLICATION_JSON)
+                .mediaType("xml", MediaType.APPLICATION_XML);
     }
 }

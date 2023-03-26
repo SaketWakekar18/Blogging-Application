@@ -10,46 +10,46 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
 @SpringBootApplication
 public class BloggingApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BloggingApplication.class, args);
-	}
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private RoleRepository roleRepository;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Bean
-	public ModelMapper modelMapper(){
-		return new ModelMapper();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BloggingApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-		try{
-			Role adminRole = new Role();
-			adminRole.setRoleid(AppConstants.ADMIN_USER);
-			adminRole.setRolename("ROLE_ADMIN");
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
-			Role userRole = new Role();
-			userRole.setRoleid(AppConstants.NORMAL_USER);
-			userRole.setRolename("ROLE_NORMAL");
+    @Override
+    public void run(String... args) throws Exception {
+        try {
+            Role adminRole = new Role();
+            adminRole.setRoleid(AppConstants.ADMIN_USER);
+            adminRole.setRolename("ROLE_ADMIN");
 
-			List<Role> roles = List.of(adminRole, userRole);
+            Role userRole = new Role();
+            userRole.setRoleid(AppConstants.NORMAL_USER);
+            userRole.setRolename("ROLE_NORMAL");
 
-			List<Role> result = this.roleRepository.saveAll(roles);
+            List<Role> roles = List.of(adminRole, userRole);
 
-			result.forEach(r->{
-				r.getRolename();
-			});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+            List<Role> result = this.roleRepository.saveAll(roles);
+
+            result.forEach(r -> {
+                r.getRolename();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

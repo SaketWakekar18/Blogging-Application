@@ -2,7 +2,7 @@ package app.springboot.blog.Services.Impl;
 
 import app.springboot.blog.Entity.Role;
 import app.springboot.blog.Entity.User;
-import app.springboot.blog.Exceptions.GlobalExceptionHandler;
+import app.springboot.blog.Exceptions.EmailAlreadyExistsException;
 import app.springboot.blog.Exceptions.ResourceNotFoundException;
 import app.springboot.blog.Payloads.AppConstants;
 import app.springboot.blog.Payloads.UserDTO;
@@ -13,10 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,17 +38,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) {
-        User user = this.modelMapper.map(userDTO,User.class);
+        User user = this.modelMapper.map(userDTO, User.class);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Role role = this.roleRepository.findById(AppConstants.NORMAL_USER).get();
         user.getRoles().add(role);
-        User newUser = this.userRepository.save(user);
-        return this.modelMapper.map(newUser,UserDTO.class);
+        if (!userRepository.existsByEmail(userDTO.getEmail())) {
+            User newUser = this.userRepository.save(user);
+            return this.modelMapper.map(newUser, UserDTO.class);
+        } else {
+            throw new EmailAlreadyExistsException("Email already exists please try again with different Email ID!");
+        }
     }
 
     @Override
     public UserDTO updateUser(UserDTO userDTO, Integer user_id) {
-        User user = this.userRepository.findById(user_id).orElseThrow(()->new ResourceNotFoundException("User","ID",user_id));
+        User user = this.userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User", "ID", user_id));
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserByID(Integer user_id) {
-        User user = this.userRepository.findById(user_id).orElseThrow(()->new ResourceNotFoundException("User","ID",user_id));
+        User user = this.userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User", "ID", user_id));
         return this.userToDto(user);
     }
 
@@ -75,13 +77,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer user_id) {
         User user = this.userRepository.findById(user_id)
-                .orElseThrow(()-> new ResourceNotFoundException("User","ID",user_id));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "ID", user_id));
         //delete all the roles assigned to the user
-       // this.userRepository.deleteUserNativeNamedParam(user.getUser_id());
+        // this.userRepository.deleteUserNativeNamedParam(user.getUser_id());
         this.userRepository.delete(user);
     }
-    public User dtoToUser(UserDTO userDTO){
-        User user = this.modelMapper.map(userDTO,User.class);
+
+    public User dtoToUser(UserDTO userDTO) {
+        User user = this.modelMapper.map(userDTO, User.class);
 //        User user = new User();
 //        user.setUser_id(userDTO.getUser_id());
 //        user.setName(userDTO.getName());
@@ -91,9 +94,9 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public UserDTO userToDto(User user){
-        UserDTO userDTO = this.modelMapper.map(user,UserDTO.class);
-                                            //(kisko karna hai, kisme se karna hai)
+    public UserDTO userToDto(User user) {
+        UserDTO userDTO = this.modelMapper.map(user, UserDTO.class);
+        //(kisko karna hai, kisme se karna hai)
 //        UserDTO userDTO = new UserDTO();
 //        userDTO.setUser_id(user.getUser_id());
 //        userDTO.setName(user.getName());

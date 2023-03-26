@@ -22,22 +22,23 @@ public class FileController {
     private String path;
     @Autowired
     private FileService fileService;
+
     @PostMapping("/upload")
-    public ResponseEntity<FileResponse> uploadImage(@RequestParam("image") MultipartFile file){
+    public ResponseEntity<FileResponse> uploadImage(@RequestParam("image") MultipartFile file) {
         String fileName = null;
         try {
-            fileName = this.fileService.uploadImage(path,file);
+            fileName = this.fileService.uploadImage(path, file);
         } catch (IOException e) {
-            return new ResponseEntity<>(new FileResponse(null,"File cannot be uploaded due to server error !"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new FileResponse(null, "File cannot be uploaded due to server error !"), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-        return new ResponseEntity<>(new FileResponse(fileName,"File uploaded Successfully !"), HttpStatus.OK);
+        return new ResponseEntity<>(new FileResponse(fileName, "File uploaded Successfully !"), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/download",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/download", produces = MediaType.IMAGE_JPEG_VALUE)
     public void downloadFile(@RequestParam("filename") String filename, HttpServletResponse httpServletResponse) throws IOException {
-        InputStream inputStream = this.fileService.getResource(path,filename);
+        InputStream inputStream = this.fileService.getResource(path, filename);
         httpServletResponse.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        StreamUtils.copy(inputStream,httpServletResponse.getOutputStream());
+        StreamUtils.copy(inputStream, httpServletResponse.getOutputStream());
     }
 }

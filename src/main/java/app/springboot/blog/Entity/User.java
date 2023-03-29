@@ -11,6 +11,10 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.EAGER;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -26,7 +30,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {PERSIST, MERGE}, fetch = EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "roleid"))
     private Set<Role> roles = new HashSet<>();

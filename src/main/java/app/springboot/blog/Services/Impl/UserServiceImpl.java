@@ -11,6 +11,7 @@ import app.springboot.blog.Repository.UserRepository;
 import app.springboot.blog.Services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,11 +76,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(Integer user_id) {
         User user = this.userRepository.findById(user_id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "ID", user_id));
         //delete all the roles assigned to the user
-        // this.userRepository.deleteUserNativeNamedParam(user.getUser_id());
         this.userRepository.delete(user);
     }
 

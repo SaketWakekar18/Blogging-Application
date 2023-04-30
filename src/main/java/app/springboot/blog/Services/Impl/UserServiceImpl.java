@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
 //        return this.userToDto(savedUser);
 //    }
 
-
     @Override
     public UserDTO registerUser(UserDTO userDTO) {
         User user = this.modelMapper.map(userDTO, User.class);

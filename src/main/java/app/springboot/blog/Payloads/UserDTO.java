@@ -1,5 +1,6 @@
 package app.springboot.blog.Payloads;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserDTO {
     private Integer user_id;
     @NotEmpty

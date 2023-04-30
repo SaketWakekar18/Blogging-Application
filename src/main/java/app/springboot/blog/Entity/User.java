@@ -21,6 +21,7 @@ import static javax.persistence.FetchType.EAGER;
 @Setter
 public class User implements UserDetails {
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
     private String name;
@@ -30,7 +31,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
-    @OneToMany(cascade = {PERSIST, MERGE}, fetch = EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH}, fetch = EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "roleid"))
     private Set<Role> roles = new HashSet<>();
